@@ -1,7 +1,9 @@
+import 'package:bytebank/components/transaction_auth_dialog.dart';
 import 'package:bytebank/http/webclients/transaction_webclient.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/models/transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 class TransactionForm extends StatefulWidget {
   final Contact contact;
@@ -58,15 +60,30 @@ class _TransactionFormState extends State<TransactionForm> {
                 child: SizedBox(
                   width: double.maxFinite,
                   child: RaisedButton(
-                    child: Text('Transfer'), onPressed: () {
-                      final double value = double.tryParse(_valueController.text);
-                      final transactionCreated = Transaction(value, widget.contact);
-                      _webClient.save(transactionCreated).then((transaction) {
-                       if(transaction != null){
-                         Navigator.pop(context);
-                       }
-                      });
-                  },
+                    child: Text('Transfer'),
+                    onPressed: () {
+                      final double value =
+                          double.tryParse(_valueController.text);
+                      final transactionCreated =
+                          Transaction(value, widget.contact);
+                      // Com o showDialog eu consigo mostrar meu diálogo
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return TransactionAuthDiolog(
+                            onConfirm: (String password) {
+                              _webClient
+                                  .save(transactionCreated, password)
+                                  .then((transaction) {
+                                if (transaction != null) {
+                                  Navigator.pop(context);
+                                }
+                              });
+                            },
+                          );
+                        },
+                      );
+                    },
                   ),
                 ),
               )
