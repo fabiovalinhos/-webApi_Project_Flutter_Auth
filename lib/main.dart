@@ -1,4 +1,3 @@
-import 'package:bytebank/components/transaction_auth_dialog.dart';
 import 'package:bytebank/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 

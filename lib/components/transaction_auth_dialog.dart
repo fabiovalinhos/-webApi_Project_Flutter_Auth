@@ -13,6 +13,7 @@ class TransactionAuthDiolog extends StatefulWidget {
 
 class _TransactionAuthDiologState extends State<TransactionAuthDiolog> {
 
+  // Já que criamos um controlador, então ele passou de StatelessWidget para StatefulWidget
   final TextEditingController _passwordController = TextEditingController();
 
   @override
@@ -32,10 +33,8 @@ class _TransactionAuthDiologState extends State<TransactionAuthDiolog> {
       ),
       actions: <Widget>[
         FlatButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
           child: Text('Cancel'),
+          onPressed: () => Navigator.pop(context),
         ),
         FlatButton(
           onPressed: () {
