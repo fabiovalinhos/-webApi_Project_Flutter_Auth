@@ -97,25 +97,51 @@ class _TransactionFormState extends State<TransactionForm> {
     String password,
     BuildContext context,
   ) async {
+    // _send foi criado via extração de método
+    await _send(
+      transactionCreated,
+      password,
+      context,
+    );
+  }
+
+  Future _send(Transaction transactionCreated, String password,
+      BuildContext context) async {
     final Transaction transaction =
         await _webClient.save(transactionCreated, password).catchError((e) {
-      showDialog(
-        context: context,
-        builder: (contextDialog) {
-          // Este e.message veio da função _Exception (só descobri isto devido a mensagem de erro)
-          return FailureDialog(e.message);
-        },
-      );
-    }, test: (e) => e is HttpException).catchError((e) {
-      showDialog(
-        context: context,
-        builder: (contextDialog) {
-          // Este e.message veio da função _Exception (só descobri isto devido a mensagem de erro)
-          return FailureDialog('timeout submitting the transaction');
-        },
-      );
-    }, test: (e) => e is TimeoutException);
 
+      // Este e.message veio da função _Exceptiona (só descobri isto devido a mensagem de erro)
+      _showFailuremessage(context, message: e.message);
+
+    }, test: (e) => e is HttpException).catchError((e) {
+
+      _showFailuremessage(context,
+          message: 'timeout submitting the transaction');
+
+    }, test: (e) => e is TimeoutException).catchError((e) {
+
+      _showFailuremessage(context);
+
+    });
+
+    // Criado via extração
+    _showSuccessfulMessage(transaction, context);
+  }
+
+  void _showFailuremessage(
+    BuildContext context, {
+    String message = 'Unknown error',
+  }) {
+    showDialog(
+      context: context,
+      builder: (contextDialog) {
+        return FailureDialog(message);
+      },
+    );
+  }
+
+  Future _showSuccessfulMessage(
+      Transaction transaction, BuildContext context) async {
     if (transaction != null) {
       await showDialog(
         context: context,
