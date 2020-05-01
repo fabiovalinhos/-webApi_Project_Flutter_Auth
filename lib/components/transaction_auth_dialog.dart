@@ -37,11 +37,11 @@ class _TransactionAuthDiologState extends State<TransactionAuthDiolog> {
           onPressed: () => Navigator.pop(context),
         ),
         FlatButton(
+          child: Text('Confirm'),
           onPressed: () {
             widget.onConfirm(_passwordController.text);
             Navigator.pop(context);
           },
-          child: Text('Confirm'),
         ),
       ],
     );
