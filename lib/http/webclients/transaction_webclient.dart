@@ -17,7 +17,8 @@ class TransactionWebClient {
   Future<Transaction> save(Transaction transaction, String password) async {
     final String transactionJson = jsonEncode(transaction.toJson());
 
-    await Future.delayed(Duration(seconds: 10));
+// Serve para testar uma demora ao salva uma transação
+    await Future.delayed(Duration(seconds: 2));
 
     final Response response = await client.post(baseUrl,
         headers: {
@@ -26,7 +27,7 @@ class TransactionWebClient {
         },
         body: transactionJson);
 
-        // throw Exception();
+    // throw Exception();
 
     if (response.statusCode == 200) {
       return Transaction.fromJson(jsonDecode(response.body));
@@ -36,7 +37,7 @@ class TransactionWebClient {
   }
 
   String _getMessage(int statusCode) {
-    if(_statusCodeResponses.containsKey(statusCode)){
+    if (_statusCodeResponses.containsKey(statusCode)) {
       return _statusCodeResponses[statusCode];
     }
     return 'Unknown error';
@@ -48,7 +49,6 @@ class TransactionWebClient {
     409: "transaction always exists",
   };
 }
-
 
 // Foi criado pois nosso Exception na mensagem de erro é muito genérico, pega até os erros de timeout
 // Vamos criar uma Exception mais expecífica
